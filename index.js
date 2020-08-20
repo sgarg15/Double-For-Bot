@@ -1,9 +1,21 @@
-//require the modules needed
+﻿//require the modules needed
+const fs = require('fs');
 const Discord = require('discord.js');
 const dotenv = require('dotenv').config();
+const got = require('got');
 
 //create a new Discord client
 const client = new Discord.Client();
+client.commands = new Discord.Collection();
+
+//retrieves every file in command folder and excludes non-js files
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+//requires all the files in the commands folder
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	client.commands.set(command.name, command);
+}
 
 //get the bot token from .env file
 const botToken = process.env.DISCORD_TOKEN;
@@ -29,22 +41,15 @@ client.on('message', message => {
 	const command = args.shift().toLowerCase();
 
 	//check message and send back a reply based on the message
-	if(command === 'args-info'){
-		if (!args.length) {
-			return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
-		}
 
-		message.channel.send(`Arguments ${args}`)
-	}
-	if(command === 'ping'){
-		message.channel.send('Pong');
-	} else if(command === 'beep'){
-		message.channel.send('Boop');
-	} else if(command === 'server'){
-		if(message.guild.icon === null){
-			message.channel.send(`Icon: There is no icon\nServer Name: ${message.guild.name}\nTotal Members: ${message.guild.memberCount}\nCreated On: ${message.guild.createdAt}`);
-		} else{
-			message.channel.send(`Icon: ${message.guild.icon}\nServer Name: ${message.guild.name}\nTotal Members: ${message.guild.memberCount}\nCreated On: ${message.guild.createdAt}`);
-		}
+	//check if theres a command with that name
+	if (!client.commands.has(command)) return;
+
+	//If there is, get and execute it, if error console and reply
+	try{
+		client.commands.get(command).execute(message, args);
+	} catch(error){
+		console.error(error);
+		message.reply('There was an issue running the command please try again or contact the creator!');
 	}
 });

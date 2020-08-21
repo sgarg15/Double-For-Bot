@@ -4,10 +4,17 @@ module.exports = {
 	name: 'server',
 	description: 'Server!',
 	execute(message, args) {
-		if(message.guild.icon === null){
-			message.channel.send(`Icon: There is no icon\nServer Name: ${message.guild.name}\nTotal Members: ${message.guild.memberCount}\nCreated On: ${message.guild.createdAt}`);
-		} else{
-			message.channel.send(`Icon: ${message.guild.icon}\nServer Name: ${message.guild.name}\nTotal Members: ${message.guild.memberCount}\nCreated On: ${message.guild.createdAt}`);
+		const serverEmbed = new Discord.MessageEmbed()
+		.setColor('#0099ff')
+		.setTitle(`Information about ${message.guild.name}`)
+		.addField('Region', `${message.guild.region}`)
+		.addField('Members', `${message.guild.memberCount}`)
+		.addField('Created', `${message.guild.createdAt}`)
+		.setTimestamp()
+		const icon = message.guild.iconURL();
+		if(icon){
+			serverEmbed.setThumbnail(icon);
 		}
+		message.channel.send(serverEmbed);
 	},
 };

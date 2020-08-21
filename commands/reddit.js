@@ -10,13 +10,15 @@ module.exports = {
 		}
 
 		switch(args[0].toLowerCase()){
-			case 'politics':
+			case 'news':
+			const newsEmbed = new Discord.MessageEmbed()
 				got('https://www.reddit.com/r/politics/random.json').then(response => {
 					let content = JSON.parse(response.body);
-					var title = content[0].data.children[0].data.title;
-					let politic = content[0].data.children[0].data.url;
-					message.channel.send('**' + title + '**');
-					message.channel.send(politic)
+					var newstitle = content[0].data.children[0].data.title;
+					let newsURL = content[0].data.children[0].data.url;
+					newsEmbed.addField(`${newstitle}`);
+					message.channel.send(newsEmbed)
+					message.channel.send(newsURL)
 				}).catch(console.error);
 				break;
 			case 'meme':
@@ -29,28 +31,37 @@ module.exports = {
 			case 'joke':
 				got('https://www.reddit.com/r/jokes/random/.json').then(response => {
 					let content = JSON.parse(response.body);
-					var title = content[0].data.children[0].data.title;
-					let joke = content[0].data.children[0].data.selftext;
-					message.channel.send('**' + title + '**');
-					message.channel.send(joke)
+					var jokeTitle = content[0].data.children[0].data.title;
+					let jokeText = content[0].data.children[0].data.selftext;
+					message.channel.send('**' + jokeTitle + '**');
+					message.channel.send(jokeText)
 				}).catch(console.error);
 				break;
 			case 'facts':
 				got('https://www.reddit.com/r/interestingasfuck/random.json').then(response => {
 					let content = JSON.parse(response.body);
-					var title = content[0].data.children[0].data.title;
-					let amazem = content[0].data.children[0].data.url;
-					message.channel.send('**' + title + '**');
-					message.channel.send(amazem)
+					var factTitle = content[0].data.children[0].data.title;
+					let factURL = content[0].data.children[0].data.url;
+					message.channel.send('**' + factTitle + '**');
+					message.channel.send(factURL)
 				}).catch(console.error);
 				break;
 			case 'learn':
 				got('https://www.reddit.com/r/todayilearned/random.json').then(response => {
 					let content = JSON.parse(response.body);
-					var title = content[0].data.children[0].data.title;
-					let learn = content[0].data.children[0].data.url;
-					message.channel.send('**' + title + '**');
-					message.channel.send(learn)
+					var learnTitle = content[0].data.children[0].data.title;
+					let learnURL = content[0].data.children[0].data.url;
+					message.channel.send('**' + learnTitle + '**');
+					message.channel.send(learnURL)
+				}).catch(console.error);
+				break;
+			case 'eli5':
+				got('https://www.reddit.com/r/explainlikeimfive/random.json').then(response => {
+					let content = JSON.parse(response.body);
+					var eli5Title = content[0].data.children[0].data.title;
+					let eli5URL = content[0].data.children[0].data.url;
+					message.channel.send('**' + eli5Title + '**');
+					message.channel.send(eli5URL)
 				}).catch(console.error);
 				break;
 		}

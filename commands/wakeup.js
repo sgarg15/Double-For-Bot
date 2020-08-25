@@ -1,33 +1,26 @@
 const Discord = require('discord.js');
+const client = require('C:/Users/apnas/OneDrive - School District No. 36 (Surrey)/Documents/Double-For-Bot/index.js');
 
 module.exports = {
 	name: 'wakeup',
 	description: 'WakeUp Server!',
 	execute(message, args) {
-		//gets a random users ID
-		function getRandomUser(){
-			//put all members in an array
-			let user = message.guild.members.cache.array();
-			//get a random number
-			let randomUser = Math.floor(Math.random() * user.length)
-			//pick a random member
-			return user[randomUser]
+		if(args.length != 2){
+			message.channel.send(`You didn't provide any arguments. Please use the help command to learn more, ${message.author}! `);
+			return;
 		}
 
-		//If no args then ping only one random user
-		if (!args.length) {
-			message.channel.send(`${getRandomUser()}`).then( message => {
-			//delete bot and user message to make it anonymous
-				message.delete({ timeout: 1000 })			
-			})
-			message.delete({ timeout: 1000 });
-			return
-		}
+		let userToPing = args[0];
+		let numberOfTimes = args[1];
 
-		//ping random person args[0] amount of times
-		message.delete({ timeout: 1000 });
-		for (let i = 0; i < args[0]; i++) {
-			message.channel.send(`${getRandomUser()}`).then( message => {
+		if(message.mentions.has(client.users.cache.get("403744585970352139"))){
+			message.channel.send(`You can't ping the creator`);
+			return;
+		}
+		
+		message.delete();
+		for (let i = 0; i < args[1]; i++) {
+			message.channel.send(`${userToPing}`).then( message => {
 				message.delete()			
 			})
 		}
